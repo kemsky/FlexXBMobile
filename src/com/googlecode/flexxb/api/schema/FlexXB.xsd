@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:simpleType name="AccessType">
+        <xs:annotation>
+            <xs:documentation>Specifies the type of access defined by the class
+                field: readonly(only a getter is defined), writeonly (only a setter
+                is defined), readwrite (getter and setter are defined or a field)
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="readonly"/>
+            <xs:enumeration value="writeonly"/>
+            <xs:enumeration value="readwrite"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ProcessStage">
+        <xs:annotation>
+            <xs:documentation>Specifies the current stage of processing. Takes
+                two values: serialize, deserialize.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="serialize"/>
+            <xs:enumeration value="deserialize"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="Field">
+        <xs:annotation>
+            <xs:documentation>Defined the class field (field, getter and/or
+                setter definition). A field is identified by name, type and access
+                type.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="type" type="xs:string" use="required"/>
+        <xs:attribute name="accessType" type="AccessType" use="optional"
+                      default="readwrite"/>
+    </xs:complexType>
+    <xs:complexType name="Argument">
+        <xs:annotation>
+            <xs:documentation>A constructor argument is a way to say to the FlexXB engine that
+                objects of a certain type need a special way to be instantiated in the deserialization
+                stage. A constructor argument is linked to a class field. Usually, when having
+                parameterized arguments, in the constructor these values are mapped to specific fields
+                within the object.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="reference" type="xs:string" use="required"/>
+        <xs:attribute name="optional" type="xs:boolean" use="optional"
+                      default="false"/>
+    </xs:complexType>
+    <xs:complexType name="FxBMember">
+        <xs:annotation>
+            <xs:documentation></xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Field" type="Field" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="ignoreOn" type="ProcessStage" use="optional"/>
+        <xs:attribute name="version" type="xs:string" default="default" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="FxBClass">
+        <xs:annotation>
+            <xs:documentation>Defines the class.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="ConstructorArguments">
+                <xs:complexType>
+                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="Argument" type="Argument" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="type" type="xs:string" use="required"/>
+        <xs:attribute name="version" type="xs:string" default="default" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="FlexXBAPI">
+        <xs:annotation>
+            <xs:documentation>This is the root element</xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="version" type="xs:positiveInteger"
+                      use="required"/>
+    </xs:complexType>
+</xs:schema>

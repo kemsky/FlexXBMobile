@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:include schemaLocation="FlexXB.xsd"/>
+
+    <xs:complexType name="XmlNamespace">
+        <xs:annotation>
+            <xs:documentation></xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="prefix" type="xs:string" use="optional"/>
+        <xs:attribute name="uri" type="xs:anyURI" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="XmlMember">
+        <xs:annotation>
+            <xs:documentation></xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="FxBMember">
+                <xs:sequence>
+                    <xs:element name="XmlNamespace" type="XmlNamespace"
+                                minOccurs="0" maxOccurs="1"/>
+                </xs:sequence>
+                <xs:attribute name="alias" type="xs:string"
+                              use="optional"/>
+                <xs:attribute name="order" type="xs:unsignedInt"
+                              use="optional"/>
+                <xs:attribute name="idref" type="xs:boolean"
+                              use="optional" default="false"/>
+                <xs:attribute name="isRequired" type="xs:boolean"></xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="XmlAttribute">
+        <xs:annotation>
+            <xs:documentation>Defines the field as being rendered as an
+                attribute.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="XmlMember"></xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="XmlElement">
+        <xs:annotation>
+            <xs:documentation>Defines the field as being rendered as an element.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="XmlMember">
+                <xs:attribute name="getFromCache" type="xs:boolean" use="optional" default="false"/>
+                <xs:attribute name="serializePartialElement" type="xs:boolean" use="optional" default="false"/>
+                <xs:attribute name="getRuntimeType" type="xs:boolean" use="optional" default="false"/>
+                <xs:attribute name="nillable" type="xs:boolean" use="optional" default="false"/>
+                <xs:attribute name="wrapCDATA" type="xs:boolean" use="optional" default="false"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="XmlArray">
+        <xs:annotation>
+            <xs:documentation>Defines the field as being rendered as a list of
+                elements.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="XmlMember">
+                <xs:sequence>
+                    <xs:element name="memberNameSpace" type="XmlNamespace" minOccurs="0" maxOccurs="1"/>
+                </xs:sequence>
+                <xs:attribute name="memberName" type="xs:string" use="optional"/>
+                <xs:attribute name="memberType" type="xs:string" use="optional"/>
+                <xs:attribute name="getFromCache" type="xs:boolean" use="optional" default="false"/>
+                <xs:attribute name="serializePartialElement" type="xs:boolean" use="optional" default="false"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="XmlClass">
+        <xs:annotation>
+            <xs:documentation>Defines the enclosing xml the is rendered for the
+                specified type.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="FxBClass">
+                <xs:sequence>
+                    <xs:element name="Members">
+                        <xs:complexType>
+                            <xs:choice minOccurs="1" maxOccurs="unbounded">
+                                <xs:element name="XmlElement" type="XmlElement" minOccurs="0" maxOccurs="unbounded"/>
+                                <xs:element name="XmlAttribute" type="XmlAttribute" minOccurs="0"
+                                            maxOccurs="unbounded"/>
+                                <xs:element name="XmlArray" type="XmlArray" minOccurs="0" maxOccurs="unbounded"/>
+                            </xs:choice>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="alias" type="xs:string" use="optional"/>
+                <xs:attribute name="prefix" type="xs:string" use="optional"/>
+                <xs:attribute name="uri" type="xs:anyURI" use="optional"/>
+                <xs:attribute name="useNamespaceFrom" type="xs:string"
+                              use="optional"/>
+                <xs:attribute name="idField" type="xs:string" use="optional"/>
+                <xs:attribute name="defaultValueField" type="xs:string"
+                              use="optional"/>
+                <xs:attribute name="ordered" type="xs:boolean" use="optional"
+                              default="false"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="FlexXBAPI">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="FlexXBAPI">
+                    <xs:sequence minOccurs="1" maxOccurs="1">
+                        <xs:element name="Descriptors">
+                            <xs:complexType>
+                                <xs:sequence minOccurs="1" maxOccurs="unbounded">
+                                    <xs:element name="XmlClass" type="XmlClass"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

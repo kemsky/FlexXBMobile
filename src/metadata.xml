@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   FlexXB - an annotation based xml serializer for Flex and Air applications
+   
+   This file lists the available metadata and all their options as built in 
+   the current version of FlexXB.
+   
+   Copyright (C) 2008-2012 Alex Ciobanu
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<annotations version="2.1.1">
+    <!--
+    Syntax: [XmlClass(alias="MyClass", useNamespaceFrom="elementFieldName", idField="idFieldName",
+                      prefix="my", uri="http://www.your.site.com/schema/", defaultValueField="fieldName",
+                      ordered="true|false", version="version_Name")]
+
+        •alias: The name of the element/attribute that represents this object in the xml request/response;
+        •useNamespaceFrom: Allows the class to use as class namespace a namespace defined by the type of one of the composing fields.
+        •idField The name of the object's field that will be used to identify that object;
+        •prefix: Namespace prefix that will be used to serialize objects of this class;
+        •uri: Namespace uri for object representations received from and transmitted to server;
+        •defaultValueField: name of the field whose value will be renderer as a free text element in the xml representation;
+        •ordered: boolean flag signaling whether a specific order has been specified for the fields or not. If true, on
+                  serialization, the fields values will be serialized in the order specified by the field annotations;
+        •version: version of the current annotation; annotations will be matched by this version value when the user needs
+                  to process an objects with different versions of xml.
+    -->
+    <metadata name="XmlClass"
+              description="Class metadata. Defines class's namespace (by uri and prefix), xml alias and more; it's the engine's entry point. Only one definition must be present at class level.">
+        <context name="class"/>
+        <attribute name="alias" type="String" required="false"/>
+        <attribute name="useNamespaceFrom" type="String" required="false"/>
+        <attribute name="idField" type="String" required="false"/>
+        <attribute name="prefix" type="String" required="false"/>
+        <attribute name="uri" type="String" required="false"/>
+        <attribute name="defaultValueField" type="String" required="false"/>
+        <attribute name="ordered" type="Boolean" required="false" defaultValue="false" hint="boolean"/>
+        <attribute name="version" type="String" required="false"/>
+    </metadata>
+
+    <!--
+    Syntax:[Namespace(prefix="namespace_Prefix", uri="namespace_Uri”, version="version_Name")]
+
+        •prefix: The prefix used by this namespace;
+        •uri: The uri used by this namespace;
+        •version: version of the current annotation; annotations will be matched by this version value
+                    when the user needs to process an objects with different versions of xml.
+    -->
+    <metadata name="Namespace"
+              description="Allows definition of multiple namespaces used by the annotations defined in the class. These namespaces can be referenced in the field annotations by their prefix. Is used as class level and multiple definitions are allowed. URI value should be unique across the class' scope">
+        <context name="class"/>
+        <attribute name="prefix" type="String" required="true"/>
+        <attribute name="uri" type="String" required="true"/>
+        <attribute name="version"/>
+    </metadata>
+
+    <!--
+    Syntax:[ConstructorArg(reference="FieldName", optional="true|false")]
+
+        •reference: Holds the name of one of the classes' fields.
+        •optional: Whether the parameter is optional or not in the constructor definition. Defaults to false.
+    -->
+    <metadata name="ConstructorArg"
+              description="Defines the arguments with which the constructor should be run. Applies to classes with non default constructors and is defined at the class level. Multiple definitions are allowed. THE DEFINITIONS' ORDER MUST REFLECT THE PARAMETERS' ORDER IN THE CONSTRUCTOR!">
+        <context name="class"/>
+        <attribute name="reference" type="String" required="true"/>
+        <attribute name="optional" type="Boolean" required="false" defaultValue="false" hint="boolean"/>
+    </metadata>
+
+    <!--
+    Syntax:[XmlAttribute(alias="attribute", ignoreOn="serialize|deserialize", order="order_index",
+                         namespace="NameSpace_Prefix", idref="true|false", required="true|false", version="version_Name")]
+
+        •alias: The name of the attribute that represents this object in the xml request/response;
+        •ignoreOn: Ignore this field from processing;
+        •order: Numeric value specifying the order of the field on serialization. the order is used only
+                if the ordered flag was set to true at class level.
+        •namespace: References by prefix a namespace registered for the current class. Allows the current item
+                    to be rendered with a qualified name containing the referenced namespace;
+        •idref: flag signaling if objects referenced in this field should be handled by identification alone;
+        •required: flag signaling if this field must be present in the xml regardless of its value being null or not;
+        •version: version of the current annotation; annotations will be matched by this version value when the
+                  user needs to process an objects with different versions of xml.
+    -->
+    <metadata name="XmlAttribute" description="">
+        <context name="variable"/>
+        <context name="getter"/>
+        <context name="setter"/>
+
+        <attribute name="alias" type="String" required="false"/>
+        <attribute name="ignoreOn" type="String" required="false" values="serialize, deserialize"/>
+        <attribute name="order" type="Number" required="false"/>
+        <attribute name="namespace" type="String" required="false"/>
+        <attribute name="idref" type="Boolean" required="false" defaultValue="false" hint="boolean"/>
+        <attribute name="required" type="Boolean" required="false" defaultValue="false" hint="boolean"/>
+        <attribute name="version" type="String" required="false"/>
+    </metadata>
+
+    <!--
+    Syntax:[XmlElement(alias="element", getFromCache="true|false", ignoreOn="serialize|deserialize",
+            serializePartialElement="true|false", order="order_index", getRuntimeType="true|false",
+            default="defaultValue" namespace="NameSpace_Prefix", setXsiType="true|false",
+            idref="true|false", nillable="true|false", wrapCDATA="true|false", required="true|false", version="version_Name")]
+
+        •alias: The name of the element that represents this object in the xml request/response;
+        •getFromCache: Get the value of this field from the object cache, based on its id
+        •ignoreOn: Ignore this field from processing;
+        •serializePartialElement: Serialize only the id of this field's value (implies that the field
+                                  represents a complex object that has an id);
+        •order: Numeric value specifying the order or the field on serialization. the order is used only
+                if the ordered flag was set to true at class level;
+        •getRuntimeType: Get the element type on deserialization based on the xml name at runtime.
+        •namespace: References by prefix a namespace registered for the current class. Allows the current
+                    item to be rendered with a qualified name containing the referenced namespace;
+        •idref: flag signaling if objects referenced in this field should be handled by identification alone;
+        •setXsiType: flag signaling the Xsi type attribute as defined in XSD schema should be added containing the class alias
+                     as defined in the XmlClass annotation;
+        •required: flag signaling if this field must be present in the xml regardless of its value being null or not;
+        •version: version of the current annotation; annotations will be matched by this version value when
+                  the user needs to process an objects with different versions of xml.
+    -->
+    <metadata name="XmlElement" description="">
+        <context name="variable"/>
+        <context name="getter"/>
+        <context name="setter"/>
+
+        <attribute name="alias" type="String" required="false"/>
+        <attribute name="getFromCache" type="Boolean" required="false" defaultValue="false" hint="boolean"/>
+        <attribute name="ignoreOn" type="String" required="false" values="serialize, deserialize"/>
+        <attribute name="serializePartialElement" type="Boolean" required="false" defaultValue="true" hint="boolean"/>
+        <attribute name="order" type="Number" required="false"/>
+        <attribute name="getRuntimeType" type="Boolean" required="false" defaultValue="true" hint="boolean"/>
+        <attribute name="namespace" type="String" required="false"/>
+        <attribute name="default" type="String" required="false"/>
+        <attribute name="idref" type="Boolean" required="false" defaultValue="false" hint="boolean"/>
+        <attribute name="setXsiType" type="Boolean" required="false" defaultValue="false" hint="boolean"/>
+        <attribute name="nillable" type="Boolean" required="false" defaultValue="false" hint="boolean"/>
+        <attribute name="wrapCDATA" type="Boolean" required="false" defaultValue="false" hint="boolean"/>
+        <attribute name="required" type="Boolean" required="false" defaultValue="false" hint="boolean"/>
+        <attribute name="version" type="String" required="false"/>
+    </metadata>
+
+    <!--
+    Syntax:[XmlArray(alias="element", memberName="NameOfArrayElement", getFromCache="true|false", type="my.full.type"
+            ignoreOn="serialize|deserialize", serializePartialElement="true|false", getRuntimeType="true|false",
+            order="index", namespace="NameSpace_Prefix", idref="true|false", setXsiType="true|false", required="true|false",
+            version="version_Name")]
+
+        •alias: The name of the element/attribute that represents this object in the xml request/response;
+        •memberName: Optionaly specify the name that each of the items' xml rendering will have;
+        •getFromCache: Get the members of the array representing this field's value from the object cache, based on their ids;
+        •type: Specify the type of the array's members;
+        •ignoreOn: Ignore this field from processing;
+        •serializePartialElement: Serialize only the ids of the array's member;
+        •getRuntimeType: Get the element type on deserialization based on the xml name at runtime.
+        •order: Numeric value specifying the order of the field on serialization. the order is used only if the ordered
+                flag was set to true at class level.
+        •namespace: References by prefix a namespace registered for the current class. Allows the current item to be rendered
+                    with a qualified name containing the referenced namespace;
+        •idref: flag signaling if objects referenced in this field should be handled by identification alone;
+        •setXsiType: flag signaling the Xsi type attribute as defined in XSD schema should be added containing the class alias
+                     as defined in the XmlClass annotation;
+        •nillable: flag signaling if this field is nillable. In this case the xml will contain an xsi:nill="true" attribute and
+                   upon deserialization the field's value will be explicitly set to null;
+        •wrapCDATA: flag signaling if this field must be present in the xml regardless of its value being null or not;
+        •required: flag signaling if this field must be present in the xml regardless of its value being null or not;
+        •version: version of the current annotation; annotations will be matched by this version value when the user needs to
+                  process an objects with different versions of xml.
+    -->
+    <metadata name="XmlArray" description="">
+        <context name="variable" type="Array"/>
+        <context name="getter" type="Array"/>
+        <context name="setter" type="Array"/>
+
+        <attribute name="alias" type="String" required="false"/>
+        <attribute name="memberName" type="String" required="false"/>
+        <attribute name="memberNamespace" type="String" required="false"/>
+        <attribute name="getFromCache" type="Boolean" required="false" defaultValue="false" hint="boolean"/>
+        <attribute name="type" type="Class" required="false"/>
+        <attribute name="ignoreOn" type="String" required="false" values="serialize, deserialize"/>
+        <attribute name="serializePartialElement" type="Boolean" required="false" defaultValue="true" hint="boolean"/>
+        <attribute name="order" type="Number" required="false"/>
+        <attribute name="getRuntimeType" type="Boolean" required="false" defaultValue="true" hint="boolean"/>
+        <attribute name="namespace" type="String" required="false"/>
+        <attribute name="idref" type="Boolean" required="false" defaultValue="false" hint="boolean"/>
+        <attribute name="setXsiType" type="Boolean" required="false" defaultValue="false" hint="boolean"/>
+        <attribute name="required" type="Boolean" required="false" defaultValue="false" hint="boolean"/>
+        <attribute name="version" type="String" required="false"/>
+    </metadata>
+</annotations>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FlexXBAPI version="1">
+    <Descriptors>
+        <Class type="com.flexxb.cls" alias="" prefix="" uri="" useNamespaceFrom="" defaultValueField="" idField=""
+               ordered="false">
+            <Element alias="" ignoreOn="serialize" getFromCache="false" serializePartialElement="false" order="1">
+                <Field name="" type="" access="readonly"/>
+            </Element>
+            <Attribute alias="" ignoreOn="deserialize" order="2">
+                <Field name="" type="" access="writeonly"/>
+            </Attribute>
+            <Array alias="" ignoreOn="" memberName="" getFromCache="false" serializePartialElement="false" order="3">
+                <Field name="" type="" access="readwrite"/>
+            </Array>
+        </Class>
+    </Descriptors>
+</FlexXBAPI>
