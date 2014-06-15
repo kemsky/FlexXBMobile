@@ -2,7 +2,7 @@
 <module type="Flex" version="4">
   <component name="FlexBuildConfigurationManager" active="FlexXB">
     <configurations>
-      <configuration name="FlexXB" output-type="Library" output-file="FlexXB_1.0.swc" output-folder="$MODULE_DIR$/bin">
+      <configuration name="FlexXB" output-type="Library" output-file="FlexXBMobile_1.0.swc" output-folder="$MODULE_DIR$/bin">
         <dependencies target-player="14.0">
           <entries>
             <entry library-id="822e3d4f-fbd9-4f58-a6e4-ec16fc523940">

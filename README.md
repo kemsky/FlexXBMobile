@@ -1,4 +1,4 @@
-FlexXB
+FlexXB Mobile
 ======
 
 FlexXB fork, optimized for mobile applications
